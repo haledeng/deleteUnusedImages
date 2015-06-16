@@ -6,7 +6,6 @@ module.exports = function(grunt){
 		var assets = [],
 	        links = [],
 	        ref = grunt.config.get('ref');
-
 	    // Get list of images
 	    grunt.file.expand({
 	        filter: 'isFile',
@@ -34,10 +33,7 @@ module.exports = function(grunt){
 	    var unused = grunt.util._.difference(assets, links);
 	    console.log('Found '+ unused.length +' unused images:');
 	    unused.forEach(function(el){
-	    	grunt.file.expand({
-		        filter: 'isFile',
-		        cwd: ref.pack // Change this to your images dir
-		    }, ['**/*.png', '**/*.jpg', '**/*.gif']).forEach(function(file){
+			assets.forEach(function(file){
 		        if(el == file){
 		        	// 删除无用图片
 		        	fs.unlink(path.join(ref.pack, file));
@@ -65,7 +61,6 @@ module.exports = function(grunt){
 	});
 
 	return {
-	    deleteImage: {
-	    }
+	    deleteImage: {}
 	};
 };
