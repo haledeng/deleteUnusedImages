@@ -3,37 +3,37 @@ var path = require('path'),
 
 module.exports = function(grunt){
 	grunt.registerTask('deleteUnusedImage', function(){
-		var assets = [],
-	        links = [],
+		var allImages = [],
+	        usedImages = [],
 	        ref = grunt.config.get('ref');
 	    // Get list of images
 	    grunt.file.expand({
 	        filter: 'isFile',
-	        cwd: ref.pack // image path
+	        cwd: ref.pack
 	    }, ['**/*.png', '**/*.jpg', '**/*.gif']).forEach(function(file){
-	    	// collect all image
-	        assets.push(file);
+	        allImages.push(file);
 	    });
 
 	    // Find images in content
 	    grunt.file.expand({
 	        filter: 'isFile',
 	        cwd: ref.pack
-	    }, ['**/*.js', '**/*.html']).forEach(function(file){ // Change this to narrow down the search
+	    }, ['**/*.js', '**/*.html']).forEach(function(file){
 	        var content = grunt.file.read(path.join(ref.pack, file));
-	        assets.forEach(function(asset){
+	        allImages.forEach(function(asset){
 	            if(content.search(asset) !== -1){
-	                links.push(asset);
+	            	// 有重复数据
+	                usedImages.push(asset);
 	            }
 	        });
 	    });
 
 	    console.log('============================================');
 	    // Output unused images
-	    var unused = grunt.util._.difference(assets, links);
+	    var unused = grunt.util._.difference(allImages, usedImages);
 	    console.log('Found '+ unused.length +' unused images:');
 	    unused.forEach(function(el){
-			assets.forEach(function(file){
+			allImages.forEach(function(file){
 		        if(el == file){
 		        	// 删除无用图片
 		        	fs.unlink(path.join(ref.pack, file));
